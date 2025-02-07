@@ -79,7 +79,7 @@ function App() {
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] text-white py-10">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-3">
         <h1 className="text-3xl font-bold mb-10">Average Calculator</h1>
         <Table>
           <TableHeader>
