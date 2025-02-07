@@ -62,16 +62,21 @@ function App() {
     gradeExam: number
   ): void {
     const _modules = [...modules];
-    const module = _modules.find((m) => m.name === name);
-    if (!module) return;
 
-    let _result = result - module.totalGrade / modules.length;
+    const totalCoeffecient = 26;
+    let _result = 0;
 
-    module.gradeTD = gradeTD;
-    module.gradeExam = gradeExam;
-    module.totalGrade = clamp((2 * gradeExam) / 3 + gradeTD / 3, 0, 20);
+    modules.forEach((m) => {
+      if (m.name === name) {
+        m.gradeTD = gradeTD;
+        m.gradeExam = gradeExam;
+        m.totalGrade = clamp((2 * gradeExam) / 3 + gradeTD / 3, 0, 20);
+      }
 
-    _result += module.totalGrade / modules.length;
+      _result += m.totalGrade * m.coeffecient;
+    });
+
+    _result /= totalCoeffecient;
 
     setResult(_result);
     setModules(_modules);
