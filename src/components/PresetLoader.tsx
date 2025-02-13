@@ -29,9 +29,9 @@ function PresetLoader({
     <Dialog open={visible} onOpenChange={(open: boolean) => !open && onClose()}>
       <DialogContent className="flex flex-col lg:max-w-screen-lg overflow-y-scroll h-80 sm:max-w-[425px] bg-[#020203] text-white border-[#2A2A2A]">
         <DialogHeader>
-          <DialogTitle>Manage Saves</DialogTitle>
+          <DialogTitle>Manage Archives</DialogTitle>
           <DialogDescription className="text-gray-400">
-            Here you can load, delete and modify your existing saves
+            Here you can load, delete and modify your existing archives
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex-1">
@@ -127,9 +127,9 @@ function NoPresetsIllustration() {
           strokeLinecap="round"
         />
       </svg>
-      <p className="text-gray-300 text-lg font-medium">No presets saved yet</p>
+      <p className="text-gray-300 text-lg font-medium">No archives saved yet</p>
       <p className="text-gray-400 text-sm mt-2">
-        Create a preset to get started
+        Create an archive to get started
       </p>
     </div>
   );

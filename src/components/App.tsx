@@ -58,8 +58,6 @@ function App() {
     module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
     _result += module.totalGrade * (module.coeffecient / 26);
 
-    console.log(module, _modules);
-
     setAverage(_result);
     setModules(_modules);
   }

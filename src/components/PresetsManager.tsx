@@ -41,8 +41,6 @@ function PresetManager({ modules, setModules }: PresetManagerProps) {
       presets.push({ name, modules });
     }
 
-    console.log("created preset", presets);
-
     storePresets(presets);
     setLoadedPresets(presets);
   }
@@ -51,8 +49,6 @@ function PresetManager({ modules, setModules }: PresetManagerProps) {
     let presets: Preset[] | null = getPresets() || [];
     const preset = presets.find((p) => p.name === presetName);
     if (!preset) return;
-
-    console.log("loaded", preset);
 
     setLoadedPreset(preset);
     setModules(preset.modules);
@@ -91,7 +87,7 @@ function PresetManager({ modules, setModules }: PresetManagerProps) {
           }}
           variant="mainer"
         >
-          Manage
+          Archives
           <GitGraph />
         </Button>
         <Button

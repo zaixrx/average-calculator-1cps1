@@ -25,14 +25,14 @@ function PresetCreator({ visible, onCreateSave, onClose }: PresetCreatorProps) {
     <Dialog open={visible} onOpenChange={(open: boolean) => !open && onClose()}>
       <DialogContent className="pb-4 flex flex-col lg:max-w-screen-lg overflow-y-scroll sm:max-w-[425px] bg-[#020203] text-white border-[#2A2A2A]">
         <DialogHeader>
-          <DialogTitle>Save Grades</DialogTitle>
+          <DialogTitle>Archive Grades</DialogTitle>
           <DialogDescription className="text-gray-400">
             Save all your grades to avoid repetitive data entry
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-4 items-center">
           <Label htmlFor="name" className="col-span-1 text-gray-200">
-            Save Name:
+            Archive Name:
           </Label>
           <Input
             id="name"
