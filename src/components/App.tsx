@@ -54,7 +54,7 @@ function App() {
     let _result = result;
     module.gradeTD = gradeTD;
     module.gradeExam = gradeExam;
-    _result -= module.totalGrade;
+    _result -= module.totalGrade * (module.coeffecient / 26);
     module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
     _result += module.totalGrade * (module.coeffecient / 26);
 
