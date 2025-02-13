@@ -36,7 +36,7 @@ function Module({ module, onModuleGradeChange }: ModuleProps) {
           onChange={({ target }) => {
             onModuleGradeChange(
               module.name,
-              Number(target.value.replace(",", ".")),
+              Number(target.value),
               module.gradeExam
             );
           }}
@@ -59,7 +59,7 @@ function Module({ module, onModuleGradeChange }: ModuleProps) {
             onModuleGradeChange(
               module.name,
               module.gradeTD,
-              Number(target.value.replace(",", "."))
+              Number(target.value)
             );
           }}
         />

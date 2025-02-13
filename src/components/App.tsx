@@ -52,11 +52,13 @@ function App() {
     if (!module) return;
 
     let _result = result;
-
-    console.log(_result, module.totalGrade);
+    module.gradeTD = gradeTD;
+    module.gradeExam = gradeExam;
     _result -= module.totalGrade;
     module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
     _result += module.totalGrade * (module.coeffecient / 26);
+
+    console.log(module, _modules);
 
     setAverage(_result);
     setModules(_modules);
