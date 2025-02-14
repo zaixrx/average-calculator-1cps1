@@ -1,11 +1,11 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { T_Module } from "./App";
+import { Module } from "./App";
 import { useState } from "react";
 import { getInteractionColor } from "@/lib/utils";
 
 interface ModuleProps {
-  module: T_Module;
+  module: Module;
   onModuleGradeChange: (
     name: string,
     gradeTD: number,
@@ -13,7 +13,7 @@ interface ModuleProps {
   ) => void;
 }
 
-function Module({ module, onModuleGradeChange }: ModuleProps) {
+function ModuleWrapper({ module, onModuleGradeChange }: ModuleProps) {
   const [tdActive, setTDActive] = useState<boolean>(false);
   const [examActive, setExamActive] = useState<boolean>(false);
 
@@ -70,4 +70,4 @@ function Module({ module, onModuleGradeChange }: ModuleProps) {
   );
 }
 
-export default Module;
+export default ModuleWrapper;

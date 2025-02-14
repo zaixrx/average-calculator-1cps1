@@ -7,10 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { clamp, getInteractionColor } from "@/lib/utils";
-import Module from "./Module";
+import ModuleWrapper from "./Module";
 import PresetManager from "./PresetsManager";
 
-export interface T_Module {
+export interface Module {
   readonly name: string;
   readonly coeffecient: number;
   gradeTD: number;
@@ -18,27 +18,31 @@ export interface T_Module {
   totalGrade: number;
 }
 
+export type Modules = {
+  [name: string]: Module;
+};
+
 function App() {
   const [result, setAverage] = useState<number>(0);
-  const [modules, setModules] = useState<T_Module[]>([]);
+  const [modules, setModules] = useState<Modules>({} as Modules);
 
   useEffect(() => {
     fetch("./data.json")
       .then((resp) => resp.json())
       .then((modulesData) => {
-        const _modules = [...modules];
+        const modules: Modules = {};
 
         for (const module in modulesData) {
-          _modules.push({
+          modules[module] = {
+            name: module,
+            coeffecient: modulesData[module],
             gradeTD: 0,
             gradeExam: 0,
             totalGrade: 0,
-            name: module,
-            coeffecient: modulesData[module],
-          });
+          };
         }
 
-        setModules(_modules);
+        setModules(modules);
       });
   }, []);
 
@@ -47,19 +51,35 @@ function App() {
     gradeTD: number,
     gradeExam: number
   ): void {
-    const _modules = [...modules];
-    const module = _modules.find((m) => m.name === name);
-    if (!module) return;
-
-    let _result = result;
+    const _modules = { ...modules };
+    const module = _modules[name];
     module.gradeTD = gradeTD;
     module.gradeExam = gradeExam;
-    _result -= module.totalGrade * (module.coeffecient / 26);
-    module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
-    _result += module.totalGrade * (module.coeffecient / 26);
 
-    setAverage(clamp(_result, 0, 20));
+    let average = result;
+    average -= module.totalGrade * (module.coeffecient / 26);
+    module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
+    average += module.totalGrade * (module.coeffecient / 26);
+
+    setAverage(average);
     setModules(_modules);
+  }
+
+  function renderModules(): React.ReactNode[] {
+    const nodes: React.ReactNode[] = [];
+
+    for (const module in modules) {
+      const m = modules[module];
+      nodes.push(
+        <ModuleWrapper
+          module={m}
+          key={m.name}
+          onModuleGradeChange={handleModuleGradeChange}
+        />
+      );
+    }
+
+    return nodes;
   }
 
   return (
@@ -68,17 +88,18 @@ function App() {
         <h1 className="text-3xl font-bold mb-5">Average Calculator</h1>
         <div className="flex gap-2">
           <PresetManager
-            setModules={(_modules: T_Module[]) => {
+            setModules={(modules: Modules) => {
               let average = 0;
 
-              _modules.forEach((m) => {
+              for (const module in modules) {
+                const m = modules[module];
                 average += m.totalGrade * m.coeffecient;
-              });
+              }
 
               average /= 26;
 
               setAverage(average);
-              setModules(_modules);
+              setModules(modules);
             }}
             modules={modules}
           />
@@ -93,38 +114,36 @@ function App() {
               <TableHead>Coefficient</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {modules.map((m) => (
-              <Module
-                module={m}
-                key={m.name}
-                onModuleGradeChange={handleModuleGradeChange}
-              />
-            ))}
-          </TableBody>
+          <TableBody>{renderModules()}</TableBody>
         </Table>
-        <div className="mt-6 rounded-lg p-6 border border-[#2A2A2A] shadow-lg">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white">Overall Average</h2>
-            <div
-              className="text-4xl font-bold"
-              style={{ color: result ? getInteractionColor(result) : "white" }}
-            >
-              {result.toFixed(2)}
-            </div>
-          </div>
-          <div className="mt-4 bg-[#2A2A2A] h-2 rounded-full">
-            <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
-              style={{
-                width: `${(result / 20) * 100}%`,
-                backgroundColor: getInteractionColor(result),
-              }}
-            ></div>
-          </div>
-        </div>
+        <AverageShowcase average={result} />
       </div>
     </main>
+  );
+}
+
+function AverageShowcase({ average }: { average: number }) {
+  return (
+    <div className="mt-5 p-5 rounded border border-[#2A2A2A] shadow-lg">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Overall Average</h2>
+        <div
+          className="text-4xl font-bold"
+          style={{ color: average ? getInteractionColor(average) : "white" }}
+        >
+          {average.toFixed(2)}
+        </div>
+      </div>
+      <div className="mt-4 bg-[#2A2A2A] h-2 rounded-full">
+        <div
+          className="h-full rounded-full transition-all duration-500 ease-out"
+          style={{
+            width: `${(average / 20) * 100}%`,
+            backgroundColor: getInteractionColor(average),
+          }}
+        ></div>
+      </div>
+    </div>
   );
 }
 

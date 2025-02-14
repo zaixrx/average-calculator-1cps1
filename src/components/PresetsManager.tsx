@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import PresetCreator from "./PresetCreator";
 import PresetLoader from "./PresetLoader";
 import { getPresets, storePresets } from "@/lib/utils";
-import { T_Module } from "./App";
+import { Modules } from "./App";
 import { GitGraph, Save } from "lucide-react";
 import { Button } from "./ui/button";
 
 export interface Preset {
   readonly name: string;
-  modules: T_Module[];
+  modules: Modules;
 }
 
 enum UIState {
@@ -18,8 +18,8 @@ enum UIState {
 }
 
 interface PresetManagerProps {
-  modules: T_Module[];
-  setModules: (modules: T_Module[]) => void;
+  modules: Modules;
+  setModules: (modules: Modules) => void;
 }
 
 function PresetManager({ modules, setModules }: PresetManagerProps) {
