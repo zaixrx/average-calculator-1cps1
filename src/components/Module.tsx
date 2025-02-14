@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Module } from "./App";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getInteractionColor } from "@/lib/utils";
 
 interface ModuleProps {
@@ -17,6 +17,13 @@ interface ModuleProps {
 function ModuleWrapper({ name, module, onModuleGradeChange }: ModuleProps) {
   const [tdActive, setTDActive] = useState<boolean>(false);
   const [examActive, setExamActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (module.totalGrade) {
+      setExamActive(true);
+      setTDActive(true);
+    }
+  }, [module]);
 
   return (
     <TableRow className="border-b border-[#2A2A2A] hover:bg-[#1e1e1e]">
