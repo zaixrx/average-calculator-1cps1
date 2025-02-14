@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getInteractionColor } from "@/lib/utils";
 
 interface ModuleProps {
+  name: string;
   module: Module;
   onModuleGradeChange: (
     name: string,
@@ -13,13 +14,13 @@ interface ModuleProps {
   ) => void;
 }
 
-function ModuleWrapper({ module, onModuleGradeChange }: ModuleProps) {
+function ModuleWrapper({ name, module, onModuleGradeChange }: ModuleProps) {
   const [tdActive, setTDActive] = useState<boolean>(false);
   const [examActive, setExamActive] = useState<boolean>(false);
 
   return (
     <TableRow className="border-b border-[#2A2A2A] hover:bg-[#1e1e1e]">
-      <TableCell>{module.name}</TableCell>
+      <TableCell>{name}</TableCell>
       <TableCell>
         <Input
           type="number"
@@ -34,11 +35,7 @@ function ModuleWrapper({ module, onModuleGradeChange }: ModuleProps) {
             if (!tdActive) setTDActive(true);
           }}
           onChange={({ target }) => {
-            onModuleGradeChange(
-              module.name,
-              Number(target.value),
-              module.gradeExam
-            );
+            onModuleGradeChange(name, Number(target.value), module.gradeExam);
           }}
         />
       </TableCell>
@@ -56,11 +53,7 @@ function ModuleWrapper({ module, onModuleGradeChange }: ModuleProps) {
             if (!examActive) setExamActive(true);
           }}
           onChange={({ target }) => {
-            onModuleGradeChange(
-              module.name,
-              module.gradeTD,
-              Number(target.value)
-            );
+            onModuleGradeChange(name, module.gradeTD, Number(target.value));
           }}
         />
       </TableCell>

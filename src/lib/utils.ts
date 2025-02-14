@@ -1,4 +1,4 @@
-import { Preset } from "@/components/PresetsManager";
+import { Archives } from "@/components/ArchiveManager";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -6,11 +6,11 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-function storePresets(data: Preset[]): void {
+function storeArchives(data: Archives): void {
   localStorage.setItem("presets", JSON.stringify(data));
 }
 
-function getPresets(): Preset[] | null {
+function getArchives(): Archives | null {
   const presetsContent = localStorage.getItem("presets");
   if (!presetsContent) return null;
   return JSON.parse(presetsContent);
@@ -31,4 +31,4 @@ function clamp(value: number, min: number, max: number): number {
   return value;
 }
 
-export { cn, storePresets, getPresets, getInteractionColor, clamp };
+export { cn, storeArchives, getArchives, getInteractionColor, clamp };

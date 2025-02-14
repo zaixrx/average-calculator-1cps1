@@ -8,33 +8,27 @@ import {
 } from "@/components/ui/table";
 import { clamp, getInteractionColor } from "@/lib/utils";
 import ModuleWrapper from "./Module";
-import PresetManager from "./PresetsManager";
+import ArchiveManager from "./ArchiveManager";
 
 export interface Module {
-  readonly name: string;
   readonly coeffecient: number;
   gradeTD: number;
   gradeExam: number;
   totalGrade: number;
 }
 
-export type Modules = {
-  [name: string]: Module;
-};
-
 function App() {
   const [result, setAverage] = useState<number>(0);
-  const [modules, setModules] = useState<Modules>({} as Modules);
+  const [modules, setModules] = useState<Record<string, Module> | null>();
 
   useEffect(() => {
     fetch("./data.json")
       .then((resp) => resp.json())
       .then((modulesData) => {
-        const modules: Modules = {};
+        const modules: Record<string, Module> = {};
 
         for (const module in modulesData) {
           modules[module] = {
-            name: module,
             coeffecient: modulesData[module],
             gradeTD: 0,
             gradeExam: 0,
@@ -68,12 +62,13 @@ function App() {
   function renderModules(): React.ReactNode[] {
     const nodes: React.ReactNode[] = [];
 
-    for (const module in modules) {
-      const m = modules[module];
+    for (const name in modules) {
+      const module = modules[name];
       nodes.push(
         <ModuleWrapper
-          module={m}
-          key={m.name}
+          key={name}
+          name={name}
+          module={module}
           onModuleGradeChange={handleModuleGradeChange}
         />
       );
@@ -83,42 +78,44 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-[#070708] text-white py-10">
-      <div className="container mx-auto px-3">
-        <h1 className="text-3xl font-bold mb-5">Average Calculator</h1>
-        <div className="flex gap-2">
-          <PresetManager
-            setModules={(modules: Modules) => {
-              let average = 0;
+    modules && (
+      <main className="min-h-screen bg-[#070708] text-white py-10">
+        <div className="container mx-auto px-3">
+          <h1 className="text-3xl font-bold mb-5">Average Calculator</h1>
+          <div className="flex gap-2">
+            <ArchiveManager
+              setModules={(modules: Record<string, Module>) => {
+                let average = 0;
 
-              for (const module in modules) {
-                const m = modules[module];
-                average += m.totalGrade * m.coeffecient;
-              }
+                for (const name in modules) {
+                  const module = modules[name];
+                  average += module.totalGrade * module.coeffecient;
+                }
 
-              average /= 26;
+                average /= 26;
 
-              setAverage(average);
-              setModules(modules);
-            }}
-            modules={modules}
-          />
+                setAverage(average);
+                setModules(modules);
+              }}
+              modules={modules}
+            />
+          </div>
+          <Table className="mt-2">
+            <TableHeader>
+              <TableRow className="border-b border-[#2A2A2A] font-bold">
+                <TableHead>Module</TableHead>
+                <TableHead>Tutorial Grade</TableHead>
+                <TableHead>Exam Grade</TableHead>
+                <TableHead>Total Grade</TableHead>
+                <TableHead>Coefficient</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>{renderModules()}</TableBody>
+          </Table>
+          <AverageShowcase average={result} />
         </div>
-        <Table className="mt-2">
-          <TableHeader>
-            <TableRow className="border-b border-[#2A2A2A] font-bold">
-              <TableHead>Module</TableHead>
-              <TableHead>Tutorial Grade</TableHead>
-              <TableHead>Exam Grade</TableHead>
-              <TableHead>Total Grade</TableHead>
-              <TableHead>Coefficient</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>{renderModules()}</TableBody>
-        </Table>
-        <AverageShowcase average={result} />
-      </div>
-    </main>
+      </main>
+    )
   );
 }
 

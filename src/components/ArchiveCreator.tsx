@@ -11,15 +11,23 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useState } from "react";
+import { Archive } from "./ArchiveManager";
 
-interface PresetCreatorProps {
+interface ArchiveCreatorProps {
   visible: boolean;
-  onCreateSave: (name: string) => void;
+  archives: Record<string, Archive> | null;
   onClose: () => void;
+  onCreateSave: (name: string) => void;
 }
 
-function PresetCreator({ visible, onCreateSave, onClose }: PresetCreatorProps) {
+function ArchiveCreator({
+  visible,
+  onCreateSave,
+  onClose,
+  archives,
+}: ArchiveCreatorProps) {
   const [saveName, setSaveName] = useState<string>("");
+  const [error, setError] = useState<string | null>("");
 
   return (
     <Dialog open={visible} onOpenChange={(open: boolean) => !open && onClose()}>
@@ -38,18 +46,29 @@ function PresetCreator({ visible, onCreateSave, onClose }: PresetCreatorProps) {
             id="name"
             value={saveName}
             placeholder="First Semester"
-            className="col-span-3"
+            className={`col-span-3 ${error && "border border-red"}`}
             onChange={({ target }) => {
               setSaveName(target.value);
+              setError(
+                archives && archives[target.value]
+                  ? "Name Already Exists"
+                  : null
+              );
             }}
           />
         </div>
+        {error && (
+          <div className="p-3 bg-red-900 rounded">
+            <span className="text-gray-300">{error}</span>
+          </div>
+        )}
         <DialogFooter className="border-t border-[#2A2A2A] pt-3">
           <Button
+            disabled={error ? true : false}
             variant="mainer"
             className="px-3"
             onClick={() => {
-              if (!saveName) return;
+              if (!saveName || (archives && archives[saveName])) return;
 
               onCreateSave(saveName);
               onClose();
@@ -64,4 +83,4 @@ function PresetCreator({ visible, onCreateSave, onClose }: PresetCreatorProps) {
   );
 }
 
-export default PresetCreator;
+export default ArchiveCreator;
