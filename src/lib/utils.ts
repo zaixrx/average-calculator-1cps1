@@ -1,4 +1,4 @@
-import { Archives } from "@/components/ArchiveManager";
+import { Archive } from "@/components/ArchiveManager";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -6,11 +6,11 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-function storeArchives(data: Archives): void {
+function storeArchives(data: Record<string, Archive>): void {
   localStorage.setItem("presets", JSON.stringify(data));
 }
 
-function getArchives(): Archives | null {
+function getArchives(): Record<string, Archive> | null {
   const presetsContent = localStorage.getItem("presets");
   if (!presetsContent) return null;
   return JSON.parse(presetsContent);
