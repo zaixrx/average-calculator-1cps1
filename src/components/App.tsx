@@ -55,7 +55,7 @@ function App() {
     module.totalGrade = clamp(gradeExam * (2 / 3) + gradeTD * (1 / 3), 0, 20);
 
     // I needed to add this line from my phone
-    const totalCoeff = Object.keys(_modules).reduce((acc: number, curr: string) => acc + _modules[key].coeffecient, 0);
+    const totalCoeff = Object.keys(_modules).reduce((acc: number, curr: string) => acc + _modules[curr].coeffecient, 0);
     average += module.totalGrade * (module.coeffecient / totalCoeff);
 
     setAverage(average);
